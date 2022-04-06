@@ -3,18 +3,25 @@ package com.wiryadev.roomwordsample
 import androidx.annotation.WorkerThread
 import kotlinx.coroutines.flow.Flow
 
-// Declares the DAO as a private property in the constructor.
-// Pass in the DAO instead of the whole database,
-// because you only need access to the DAO
+/**
+ * Deklarasikan DAO sebagai properti di constructor.
+ * Gunakan DAO sebagai dependency daripada menggunakan keseluruhan database,
+ * karena seluruh fungsi yang diperlukan bisa diakses melalui DAO.
+ */
 class WordRepository(private val wordDao: WordDao) {
 
-    // Room executes all queries on a separate thread.
-    // Observed Flow will notify the observer when the data has changed.
+    /**
+     * Room mengeksekusi seluruh query di thread yang terpisah.
+     * Flow yang diamati akan otomatis memberitahu observer/pengamat
+     * ketika data terlah berubah.
+     */
     val allWords: Flow<List<Word>> = wordDao.getAlphabetizedWords()
 
-    // By default Room runs suspend queries off the main thread, therefore, we don't need to
-    // implement anything else to ensure we're not doing long running database work
-    // off the main thread.
+    /**
+     * Secara default, Room menjalankan query yang ditandai sebagai suspend function di luar main thread,
+     * oleh akrean itu, kita tidak perlu melakukan hal lain untuk memastikan operasi database tidak berada
+     * di main thread.
+     */
     @WorkerThread
     suspend fun insert(word: Word) {
         wordDao.insert(word)

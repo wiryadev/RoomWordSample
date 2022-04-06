@@ -49,7 +49,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         wordViewModel.allWords.observe(this) { words ->
-            // Update the cached copy of the words in the adapter.
+            // Mengirimkan data terbaru ke adapter.
             words?.let { adapter.submitList(it) }
         }
     }

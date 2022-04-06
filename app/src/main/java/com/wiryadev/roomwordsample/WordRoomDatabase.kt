@@ -33,10 +33,10 @@ abstract class WordRoomDatabase : RoomDatabase() {
         }
 
         suspend fun populateDatabase(wordDao: WordDao) {
-            // Delete all content here.
+            // Menghapus keseluruhan konten
             wordDao.deleteAll()
 
-            // Add sample words.
+            // Menambahkan contoh kata (pre-populate).
             var word = Word("Hello")
             wordDao.insert(word)
             word = Word("World!")
@@ -49,8 +49,10 @@ abstract class WordRoomDatabase : RoomDatabase() {
     }
 
     companion object {
-        // Singleton prevents multiple instances of database
-        // opening at the same time.
+        /**
+         * Singleton mencegah lebih dari satu instance tercipta
+         * di waktu yang bersamaan
+         */
         @Volatile
         private var INSTANCE: WordRoomDatabase? = null
 
@@ -58,8 +60,10 @@ abstract class WordRoomDatabase : RoomDatabase() {
             context: Context,
             scope: CoroutineScope,
         ): WordRoomDatabase {
-            // if the INSTANCE is not null, then return it,
-            // if it is, then create the database
+            /**
+             * Jika [INSTACE] tidak null, dapat langsung dikembalikan.
+             * Jika masih null, diinisialisasi dulu.
+             */
             return INSTANCE ?: synchronized(this) {
                 val instance = Room
                     .databaseBuilder(
@@ -70,7 +74,7 @@ abstract class WordRoomDatabase : RoomDatabase() {
                     .addCallback(WordDatabaseCallback(scope))
                     .build()
                 INSTANCE = instance
-                // return instance
+                // mengembalikan instance
                 instance
             }
         }
